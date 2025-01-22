@@ -2,8 +2,10 @@
 #include "common.h"
 #include "code.h"
 #include "disasm.h"
+#include "vm.h"
 
 int main(int argc, const char* argv[]) {
+    VM_init();
     Code code;
 
     Code_init(&code);
@@ -14,6 +16,10 @@ int main(int argc, const char* argv[]) {
     Code_writeStream(&code, OP_RETURN);
     Code_SetLocation(&code, 2, 1);
     disasm_disassembleCode(&code);
+    printf("executing...\n");
+    InterpretResult result = VM_interpret(&code);
+    printf("Result code %d.\n", result);
+    VM_free();
     Code_free(&code);
 
     return 0;
