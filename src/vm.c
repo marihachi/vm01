@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "vm.h"
 
 VM vm;
@@ -10,24 +11,26 @@ void VM_free() {
 
 static InterpretResult run() {
 #define READ_BYTE() (*vm.ip++)
-    uint8_t inst;
-
+#define GET_CONSTANT(index) (vm.code->constantPool.ptr[index])
+    Value constant;
 FETCH_POINT:
-    inst = READ_BYTE();
-    switch (inst) {
+    switch (READ_BYTE()) {
         case OP_CONSTANT: goto OP_CONSTANT_POINT;
         case OP_RETURN: goto OP_RETURN_POINT;
     }
     return INTERPRET_RUNTIME_ERROR;
 
 OP_CONSTANT_POINT:
-    READ_BYTE();
+    constant = GET_CONSTANT(READ_BYTE());
+    Value_print(constant);
+    printf("\n");
     goto FETCH_POINT;
 
 OP_RETURN_POINT:
     return INTERPRET_OK;
 
 #undef READ_BYTE
+#undef GET_CONSTANT
 }
 
 InterpretResult VM_interpret(Code *code) {
