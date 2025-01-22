@@ -1,5 +1,5 @@
-#ifndef VM_CODE_H
-#define VM_CODE_H
+#ifndef VM01_CODE_H
+#define VM01_CODE_H
 
 #include "common.h"
 #include "uint8Array.h"

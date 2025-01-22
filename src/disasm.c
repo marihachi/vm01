@@ -56,7 +56,6 @@ void disasm_disassembleCode(Code *code) {
 }
 
 void disasm_disassembleInst(Code *code) {
-    InstInfo *info;
     int instOffset = code->readOffset;
     printf("%04d ", instOffset);
 

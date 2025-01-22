@@ -1,5 +1,5 @@
-#ifndef VM_INST_INFO_H
-#define VM_INST_INFO_H
+#ifndef VM01_INST_INFO_H
+#define VM01_INST_INFO_H
 
 #include "common.h"
 

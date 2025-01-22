@@ -1,5 +1,5 @@
-#ifndef VM_UINT8_ARRAY_H
-#define VM_UINT8_ARRAY_H
+#ifndef VM01_UINT8_ARRAY_H
+#define VM01_UINT8_ARRAY_H
 
 #include "common.h"
 

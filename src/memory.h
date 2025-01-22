@@ -1,5 +1,5 @@
-#ifndef VM_MEMORY_H
-#define VM_MEMORY_H
+#ifndef VM01_MEMORY_H
+#define VM01_MEMORY_H
 
 #include "common.h"
 

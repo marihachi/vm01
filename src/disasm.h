@@ -1,5 +1,5 @@
-#ifndef VM_DISASM_H
-#define VM_DISASM_H
+#ifndef VM01_DISASM_H
+#define VM01_DISASM_H
 
 #include "common.h"
 #include "code.h"

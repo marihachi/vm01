@@ -1,5 +1,5 @@
-#ifndef VM_COMMON_H
-#define VM_COMMON_H
+#ifndef VM01_COMMON_H
+#define VM01_COMMON_H
 
 #include <stdint.h>
 #include <stdbool.h>

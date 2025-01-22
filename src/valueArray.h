@@ -1,5 +1,5 @@
-#ifndef VM_VALUE_ARRAY_H
-#define VM_VALUE_ARRAY_H
+#ifndef VM01_VALUE_ARRAY_H
+#define VM01_VALUE_ARRAY_H
 
 #include "common.h"
 #include "value.h"
