@@ -7,13 +7,14 @@
 int main(int argc, const char* argv[]) {
     VM_init();
     Code code;
+    int constantAddr;
 
     Code_init(&code);
-    int poolAddress = Code_addConstant(&code, 1.2);
-    Code_writeStream(&code, OP_CONSTANT);
+    Code_addByte(&code, OP_CONSTANT);
     Code_SetLocation(&code, 1, 1);
-    Code_writeStream(&code, poolAddress);
-    Code_writeStream(&code, OP_RETURN);
+    constantAddr = Code_addConstant(&code, 2.3);
+    Code_addByte(&code, constantAddr);
+    Code_addByte(&code, OP_RETURN);
     Code_SetLocation(&code, 2, 1);
     disasm_disassembleCode(&code);
     printf("executing...\n");

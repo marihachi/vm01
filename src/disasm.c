@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "disasm.h"
 #include "value.h"
 #include "valueArray.h"
@@ -29,54 +30,54 @@ static void printLocation(Code *code, int instOffset) {
     printf("(%d:%d)", info->line, info->column);
 }
 
-static void constantInstruction(Code *code, int instOffset) {
+static int constantInstruction(Code *code, int instOffset) {
     uint8_t address;
-    if (!Code_readStream(code, &address)) {
-        printf("fetch failed\n");
-        return;
+    if (!Uint8Array_getItem(&code->stream, instOffset + 1, &address)) {
+        printf("ERROR: OUT_OF_RANGE_ACCESS\n");
+        exit(1);
     }
     printf("OP_CONSTANT %d ", address);
     Value value;
     if (!ValueArray_getItem(&code->constantPool, address, &value)) {
-        printf("fetch failed\n");
-        return;
+        printf("ERROR: OUT_OF_RANGE_ACCESS\n");
+        exit(1);
     }
     Value_print(value);
     printf(" ");
     printLocation(code, instOffset);
     printf("\n");
+    return instOffset + 2;
 }
 
 void disasm_disassembleCode(Code *code) {
     printf("== BEGIN PROGRAM ==\n");
-    while (!END_OF_CODE(code)) {
-        disasm_disassembleInst(code);
+    int instOffset = 0;
+    while (!END_OF_CODE(code, instOffset)) {
+        instOffset = disasm_disassembleInst(code, instOffset);
     }
     printf("== END PROGRAM ==\n");
 }
 
-void disasm_disassembleInst(Code *code) {
-    int instOffset = code->readOffset;
+int disasm_disassembleInst(Code *code, int instOffset) {
     printf("%04d ", instOffset);
 
     uint8_t opcode;
-    if (!Code_readStream(code, &opcode)) {
-        printf("fetch failed\n");
-        return;
+    if (!Uint8Array_getItem(&code->stream, instOffset, &opcode)) {
+        printf("ERROR: OUT_OF_RANGE_ACCESS\n");
+        exit(1);
     }
     switch (opcode) {
         case OP_CONSTANT:
-            constantInstruction(code, instOffset);
-            return;
+            return constantInstruction(code, instOffset);
         case OP_RETURN:
             printf("OP_RETURN ");
             printLocation(code, instOffset);
             printf("\n");
-            return;
+            return instOffset + 1;
         default:
             printf("unknown opcode %d ", opcode);
             printLocation(code, instOffset);
             printf("\n");
-            return;
+            return instOffset + 1;
     }
 }

@@ -5,6 +5,10 @@
 #include "code.h"
 
 void disasm_disassembleCode(Code *code);
-void disasm_disassembleInst(Code *code);
+
+/**
+ * @returns offset of the next instruction
+*/
+int disasm_disassembleInst(Code *code, int instOffset);
 
 #endif
