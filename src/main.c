@@ -17,7 +17,8 @@ int main(int argc, const char* argv[]) {
     Code_addByte(&code, OP_RETURN);
     Code_SetLocation(&code, 2, 1);
     disasm_disassembleCode(&code);
-    printf("executing...\n");
+    printf("\n");
+    printf("executing runtime ...\n");
     InterpretResult result = VM_interpret(&code);
     printf("Result code %d.\n", result);
     VM_free();

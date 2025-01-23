@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include "disasm.h"
 #include "vm.h"
 
 VM vm;
@@ -15,6 +16,9 @@ static InterpretResult run() {
 #define GET_CONSTANT(index) (vm.code->constantPool.ptr[index])
     Value constant;
 FETCH_POINT:
+#ifdef DEBUG_TRACE_EXECUTION
+    disasm_disassembleInst(vm.code, (int)(vm.ip - vm.code->stream.ptr));
+#endif
     switch (READ_BYTE()) {
         case OP_CONSTANT: goto OP_CONSTANT_POINT;
         case OP_RETURN: goto OP_RETURN_POINT;
