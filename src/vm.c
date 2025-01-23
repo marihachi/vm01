@@ -10,6 +10,7 @@ void VM_free() {
 }
 
 static InterpretResult run() {
+    // This function is written at a lower level because it is performance critical.
 #define READ_BYTE() (*vm.ip++)
 #define GET_CONSTANT(index) (vm.code->constantPool.ptr[index])
     Value constant;
