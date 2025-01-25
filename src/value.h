@@ -1,4 +1,4 @@
-#ifndef VM01_VALUE_H
+﻿#ifndef VM01_VALUE_H
 #define VM01_VALUE_H
 
 #include "common.h"

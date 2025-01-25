@@ -1,4 +1,4 @@
-#ifndef VM01_INST_INFO_ARRAY_H
+﻿#ifndef VM01_INST_INFO_ARRAY_H
 #define VM01_INST_INFO_ARRAY_H
 
 #include "common.h"

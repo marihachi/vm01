@@ -1,4 +1,4 @@
-#include <stdlib.h>
+﻿#include <stdlib.h>
 #include "memory.h"
 
 void *memory_reallocate(void *pointer, size_t oldSize, size_t newSize) {

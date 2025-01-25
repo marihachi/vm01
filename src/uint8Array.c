@@ -1,4 +1,4 @@
-#include "uint8Array.h"
+﻿#include "uint8Array.h"
 #include "memory.h"
 
 void Uint8Array_init(Uint8Array *arr) {
