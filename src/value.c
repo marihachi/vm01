@@ -1,6 +1,6 @@
 ﻿#include <stdio.h>
 #include "value.h"
 
-void Value_print(Value value) {
+void Value_print(int32_t value) {
     printf("%d", value);
 }

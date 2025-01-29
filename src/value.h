@@ -3,8 +3,8 @@
 
 #include "common.h"
 
-typedef uint8_t Value;
+typedef int32_t Value;
 
-void Value_print(Value value);
+void Value_print(int32_t value);
 
 #endif

@@ -2,9 +2,8 @@
 #include <stdlib.h>
 #include "debug.h"
 #include "value.h"
-#include "valueArray.h"
 
-static InstInfo *findInstInfo(Program *program, int offset) {
+static InstInfo *findInstInfo(Program *program, uint32_t offset) {
     int i = 0;
     InstInfo *ptr = NULL;
     while (i < program->info.length) {
@@ -31,14 +30,14 @@ static void printLocation(Program *program, int instOffset) {
 }
 
 static int pushInstruction(Program *program, int instOffset) {
-    uint8_t address;
-    if (!Uint8Array_getItem(&program->codeArray, instOffset + 1, &address)) {
+    uint16_t address;
+    if (!Uint8Array_getItems(&program->codeArray, instOffset + 1, 2, (uint8_t *)&address)) {
         printf("ERROR: OUT_OF_RANGE_ACCESS\n");
         exit(1);
     }
     printf("PUSH 0x%02X ", address);
-    Value value;
-    if (!ValueArray_getItem(&program->constantPool, address, &value)) {
+    int32_t value;
+    if (!Uint8Array_getItems(&program->constantPool, address, 4, (uint8_t *)&value)) {
         printf("ERROR: OUT_OF_RANGE_ACCESS\n");
         exit(1);
     }

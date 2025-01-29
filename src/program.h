@@ -3,7 +3,6 @@
 
 #include "common.h"
 #include "uint8Array.h"
-#include "valueArray.h"
 #include "instInfoArray.h"
 
 #define END_OF_SECTION(program, offset) \
@@ -25,14 +24,15 @@ typedef enum {
 
 typedef struct {
     Uint8Array codeArray;
-    ValueArray constantPool;
+    Uint8Array constantPool;
     InstInfoArray info;
 } Program;
 
 void Program_init(Program *program);
-int Program_addByte(Program *program, uint8_t byte);
+uint16_t Program_addByte(Program *program, uint8_t value);
+uint16_t Program_addBytes(Program *program, const uint8_t *value, int length);
 void Program_addInfo(Program *program, InstInfo *info);
-int Program_addConstant(Program *program, Value value);
+uint16_t Program_addConstant(Program *program, const uint8_t *value, int length);
 void Program_free(Program *program);
 
 #endif

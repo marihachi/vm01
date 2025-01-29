@@ -4,12 +4,12 @@
 #include "common.h"
 
 typedef struct {
-    int addr;
-    int line;
-    int column;
+    uint32_t addr;
+    uint32_t line;
+    uint32_t column;
 } InstInfo;
 
-void InstInfo_init(InstInfo *info, int addr);
-void InstInfo_setLocation(InstInfo *info, int line, int column);
+void InstInfo_init(InstInfo *info, uint32_t addr);
+void InstInfo_setLocation(InstInfo *info, uint32_t line, uint32_t column);
 
 #endif

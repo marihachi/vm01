@@ -9,23 +9,28 @@ int main(int argc, const char* argv[]) {
     VM_init();
     Program program;
     InstInfo info;
-    int constantAddr, codeAddr;
+    uint16_t constantAddr, codeAddr;
+    int32_t value;
 
     Program_init(&program);
+
+    printf("size %d\n", (int)sizeof(InstInfoArray));
 
     codeAddr = Program_addByte(&program, OP_STORE);
     InstInfo_init(&info, codeAddr);
     InstInfo_setLocation(&info, 1, 1);
     Program_addInfo(&program, &info);
-    constantAddr = Program_addConstant(&program, 4);
-    Program_addByte(&program, constantAddr);
+    value = 4;
+    constantAddr = Program_addConstant(&program, (uint8_t *)&value, 4);
+    Program_addBytes(&program, (uint8_t *)&constantAddr, 2);
 
     codeAddr = Program_addByte(&program, OP_STORE);
     InstInfo_init(&info, codeAddr);
     InstInfo_setLocation(&info, 2, 1);
     Program_addInfo(&program, &info);
-    constantAddr = Program_addConstant(&program, 1);
-    Program_addByte(&program, constantAddr);
+    value = 1;
+    constantAddr = Program_addConstant(&program, (uint8_t *)&value, 4);
+    Program_addBytes(&program, (uint8_t *)&constantAddr, 2);
 
     codeAddr = Program_addByte(&program, OP_SUB);
     InstInfo_init(&info, codeAddr);
@@ -36,8 +41,9 @@ int main(int argc, const char* argv[]) {
     InstInfo_init(&info, codeAddr);
     InstInfo_setLocation(&info, 4, 1);
     Program_addInfo(&program, &info);
-    constantAddr = Program_addConstant(&program, 2);
-    Program_addByte(&program, constantAddr);
+    value = 2;
+    constantAddr = Program_addConstant(&program, (uint8_t *)&value, 4);
+    Program_addBytes(&program, (uint8_t *)&constantAddr, 2);
 
     codeAddr = Program_addByte(&program, OP_MUL);
     InstInfo_init(&info, codeAddr);
