@@ -33,36 +33,100 @@ static void pop(uint8_t *ptr, int length) {
     }
 }
 
+void syscallHandler() {
+#define READ_BYTE() (*vm.pc++)
+    uint8_t code, value;
+    code = READ_BYTE();
+    if (code == 1) {
+        pop(&value, 1);
+        printf("%d\n", value);
+    }
+#undef READ_BYTE
+}
+
 static ExecResult run() {
     // This function is written at a lower level because it is performance critical.
 #define READ_BYTE() (*vm.pc++)
 #define CONSTANT_AT(index) (vm.program->constantPool.ptr[index])
-    double doubleValue;
+    uint8_t value, left, right;
 FETCH_POINT:
 #ifdef DEBUG_TRACE_EXECUTION
     printf("[DEBUG] pc: ");
     Debug_printInst(vm.program, (int)(vm.pc - vm.program->codeArray.ptr));
     printf("[DEBUG] sp: 0x%04X\n", (int)(vm.sp - (uint8_t *)vm.stack));
+    printf("[DEBUG] ----\n");
 #endif
     switch (READ_BYTE()) {
-        case OP_CONSTANT: goto OP_CONSTANT_POINT;
-        case OP_PRINT_NUM: goto OP_PRINT_NUM_POINT;
+        case OP_NOP: goto FETCH_POINT;
+        case OP_ADD: goto OP_ADD_POINT;
+        case OP_SUB: goto OP_SUB_POINT;
+        case OP_MUL: goto OP_MUL_POINT;
+        case OP_DIV: goto OP_DIV_POINT;
+        case OP_REM: goto OP_REM_POINT;
+        case OP_STORE: goto OP_STORE_POINT;
+        case OP_CALL: goto OP_CALL_POINT;
         case OP_RETURN: goto OP_RETURN_POINT;
+        case OP_RETURN_I: goto OP_RETURN_I_POINT;
+        case OP_SYSCALL: goto OP_SYSCALL_POINT;
     }
     return EXEC_RESULT_ERROR;
 
-OP_CONSTANT_POINT:
-    doubleValue = CONSTANT_AT(READ_BYTE());
-    push((uint8_t *)&doubleValue, sizeof(doubleValue));
+OP_ADD_POINT:
+    pop(&right, 1);
+    pop(&left, 1);
+    value = left + right;
+    push(&value, 1);
     goto FETCH_POINT;
 
-OP_PRINT_NUM_POINT:
-    pop((uint8_t *)&doubleValue, sizeof(doubleValue));
-    printf("%g\n", doubleValue);
+OP_SUB_POINT:
+    pop(&right, 1);
+    pop(&left, 1);
+    value = left - right;
+    push(&value, 1);
+    goto FETCH_POINT;
+
+OP_MUL_POINT:
+    pop(&right, 1);
+    pop(&left, 1);
+    value = left * right;
+    push(&value, 1);
+    goto FETCH_POINT;
+
+OP_DIV_POINT:
+    pop(&right, 1);
+    pop(&left, 1);
+    value = left / right;
+    push(&value, 1);
+    goto FETCH_POINT;
+
+OP_REM_POINT:
+    pop(&right, 1);
+    pop(&left, 1);
+    value = left % right;
+    push(&value, 1);
+    goto FETCH_POINT;
+
+OP_STORE_POINT:
+    value = CONSTANT_AT(READ_BYTE());
+    push(&value, 1);
+    goto FETCH_POINT;
+
+OP_CALL_POINT:
+    // TODO
     goto FETCH_POINT;
 
 OP_RETURN_POINT:
+    // TODO
     return EXEC_RESULT_OK;
+
+OP_RETURN_I_POINT:
+    pop(&value, 1);
+    // TODO
+    return EXEC_RESULT_OK;
+
+OP_SYSCALL_POINT:
+    syscallHandler();
+    goto FETCH_POINT;
 
 #undef READ_BYTE
 #undef GET_CONSTANT

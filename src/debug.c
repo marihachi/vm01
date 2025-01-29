@@ -30,13 +30,13 @@ static void printLocation(Program *program, int instOffset) {
     printf("(%d:%d)", info->line, info->column);
 }
 
-static int constantInstruction(Program *program, int instOffset) {
+static int pushInstruction(Program *program, int instOffset) {
     uint8_t address;
     if (!Uint8Array_getItem(&program->codeArray, instOffset + 1, &address)) {
         printf("ERROR: OUT_OF_RANGE_ACCESS\n");
         exit(1);
     }
-    printf("OP_CONSTANT 0x%02X ", address);
+    printf("PUSH 0x%02X ", address);
     Value value;
     if (!ValueArray_getItem(&program->constantPool, address, &value)) {
         printf("ERROR: OUT_OF_RANGE_ACCESS\n");
@@ -47,6 +47,22 @@ static int constantInstruction(Program *program, int instOffset) {
     printLocation(program, instOffset);
     printf("\n");
     return instOffset + 2;
+}
+
+static int syscallInstruction(Program *program, int instOffset) {
+    uint8_t subCode;
+    if (!Uint8Array_getItem(&program->codeArray, instOffset + 1, &subCode)) {
+        printf("ERROR: OUT_OF_RANGE_ACCESS\n");
+        exit(1);
+    }
+    printf("SYSCALL 0x%02X ", subCode);
+    printLocation(program, instOffset);
+    printf("\n");
+    if (subCode == 1) {
+        return instOffset + 2;
+    } else {
+        return instOffset + 1;
+    }
 }
 
 void Debug_printProgram(Program *program) {
@@ -67,18 +83,49 @@ int Debug_printInst(Program *program, int instOffset) {
         exit(1);
     }
     switch (opcode) {
-        case OP_CONSTANT:
-            return constantInstruction(program, instOffset);
-        case OP_PRINT_NUM:
-            printf("OP_PRINT_NUM ");
+        case OP_NOP:
+            printf("NOP ");
             printLocation(program, instOffset);
             printf("\n");
             return instOffset + 1;
+        case OP_ADD:
+            printf("ADD ");
+            printLocation(program, instOffset);
+            printf("\n");
+            return instOffset + 1;
+        case OP_SUB:
+            printf("SUB ");
+            printLocation(program, instOffset);
+            printf("\n");
+            return instOffset + 1;
+        case OP_MUL:
+            printf("MUL ");
+            printLocation(program, instOffset);
+            printf("\n");
+            return instOffset + 1;
+        case OP_DIV:
+            printf("DIV ");
+            printLocation(program, instOffset);
+            printf("\n");
+            return instOffset + 1;
+        case OP_REM:
+            printf("REM ");
+            printLocation(program, instOffset);
+            printf("\n");
+            return instOffset + 1;
+        case OP_STORE:
+            return pushInstruction(program, instOffset);
+        case OP_CALL:
+            return instOffset + 2;
         case OP_RETURN:
-            printf("OP_RETURN ");
+            printf("RETURN ");
             printLocation(program, instOffset);
             printf("\n");
             return instOffset + 1;
+        case OP_RETURN_I:
+            return instOffset + 1;
+        case OP_SYSCALL:
+            return syscallInstruction(program, instOffset);
         default:
             printf("unknown opcode 0x%02X ", opcode);
             printLocation(program, instOffset);

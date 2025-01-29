@@ -3,7 +3,7 @@
 
 #include "common.h"
 
-typedef double Value;
+typedef uint8_t Value;
 
 void Value_print(Value value);
 

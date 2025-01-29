@@ -10,9 +10,17 @@
     ((offset) >= (program)->codeArray.length)
 
 typedef enum {
-    OP_CONSTANT,
-    OP_PRINT_NUM,
+    OP_NOP,
+    OP_ADD,
+    OP_SUB,
+    OP_MUL,
+    OP_DIV,
+    OP_REM,
+    OP_STORE,
+    OP_CALL,
     OP_RETURN,
+    OP_RETURN_I,
+    OP_SYSCALL,
 } OpCode;
 
 typedef struct {
