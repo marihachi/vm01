@@ -46,9 +46,13 @@ void syscallHandler() {
 
 static ExecResult run() {
     // This function is written at a lower level because it is performance critical.
-#define READ_BYTE() (*vm.pc++)
+#define READ_UINT8() (*vm.pc)
+#define READ_UINT16() (*(uint16_t *)vm.pc)
+#define FORWARD_8() (vm.pc++)
+#define FORWARD_16() (vm.pc += 2)
 #define CONSTANT_AT(index) (vm.program->constantPool.ptr[index])
-    uint8_t value, left, right;
+    uint8_t opcode, value, left, right;
+    uint16_t addr;
 FETCH_POINT:
 #ifdef DEBUG_TRACE_EXECUTION
     printf("[DEBUG] pc: ");
@@ -56,7 +60,9 @@ FETCH_POINT:
     printf("[DEBUG] sp: 0x%04X\n", (int)(vm.sp - (uint8_t *)vm.stack));
     printf("[DEBUG] ----\n");
 #endif
-    switch (READ_BYTE()) {
+    opcode = READ_UINT8();
+    FORWARD_8();
+    switch (opcode) {
         case OP_NOP: goto FETCH_POINT;
         case OP_ADD: goto OP_ADD_POINT;
         case OP_SUB: goto OP_SUB_POINT;
@@ -107,7 +113,9 @@ OP_REM_POINT:
     goto FETCH_POINT;
 
 OP_STORE_POINT:
-    value = CONSTANT_AT(READ_BYTE());
+    addr = READ_UINT16();
+    FORWARD_16();
+    value = CONSTANT_AT(addr);
     push(&value, 1);
     goto FETCH_POINT;
 

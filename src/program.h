@@ -2,8 +2,8 @@
 #define VM01_PROGRAM_H
 
 #include "common.h"
-#include "uint8Array.h"
-#include "instInfoArray.h"
+#include "spanArray.h"
+#include "instInfo.h"
 
 #define END_OF_SECTION(program, offset) \
     ((offset) >= (program)->codeArray.length)
@@ -23,16 +23,16 @@ typedef enum {
 } OpCode;
 
 typedef struct {
-    Uint8Array codeArray;
-    Uint8Array constantPool;
-    InstInfoArray info;
+    SpanArray codeArray;
+    SpanArray constantPool;
+    SpanArray infos;
 } Program;
 
 void Program_init(Program *program);
 uint16_t Program_addByte(Program *program, uint8_t value);
-uint16_t Program_addBytes(Program *program, const uint8_t *value, int length);
-void Program_addInfo(Program *program, InstInfo *info);
-uint16_t Program_addConstant(Program *program, const uint8_t *value, int length);
+uint16_t Program_addBytes(Program *program, const uint8_t *value, uint16_t length);
+void Program_addInfo(Program *program, const InstInfo *info);
+uint16_t Program_addConstant(Program *program, const uint8_t *value, uint16_t length);
 void Program_free(Program *program);
 
 #endif

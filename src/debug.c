@@ -6,8 +6,8 @@
 static InstInfo *findInstInfo(Program *program, uint32_t offset) {
     int i = 0;
     InstInfo *ptr = NULL;
-    while (i < program->info.length) {
-        ptr = &program->info.ptr[i];
+    while (i < program->infos.length) {
+        ptr = (InstInfo *)&program->infos.ptr[program->infos.elSize * i];
         if (ptr->addr >= offset) {
             break;
         }
@@ -23,7 +23,7 @@ static InstInfo *findInstInfo(Program *program, uint32_t offset) {
 static void printLocation(Program *program, int instOffset) {
     InstInfo *info = findInstInfo(program, instOffset);
     if (info == NULL) {
-        printf("instruction info not found\n");
+        printf("instruction info not found");
         return;
     }
     printf("(%d:%d)", info->line, info->column);
@@ -31,13 +31,13 @@ static void printLocation(Program *program, int instOffset) {
 
 static int pushInstruction(Program *program, int instOffset) {
     uint16_t address;
-    if (!Uint8Array_getItems(&program->codeArray, instOffset + 1, 2, (uint8_t *)&address)) {
+    if (!SpanArray_getItems(&program->codeArray, instOffset + 1, (uint8_t *)&address, 2)) {
         printf("ERROR: OUT_OF_RANGE_ACCESS\n");
         exit(1);
     }
     printf("PUSH 0x%02X ", address);
     int32_t value;
-    if (!Uint8Array_getItems(&program->constantPool, address, 4, (uint8_t *)&value)) {
+    if (!SpanArray_getItems(&program->constantPool, address, (uint8_t *)&value, 4)) {
         printf("ERROR: OUT_OF_RANGE_ACCESS\n");
         exit(1);
     }
@@ -45,12 +45,12 @@ static int pushInstruction(Program *program, int instOffset) {
     printf(" ");
     printLocation(program, instOffset);
     printf("\n");
-    return instOffset + 2;
+    return instOffset + 3;
 }
 
 static int syscallInstruction(Program *program, int instOffset) {
     uint8_t subCode;
-    if (!Uint8Array_getItem(&program->codeArray, instOffset + 1, &subCode)) {
+    if (!SpanArray_getItem(&program->codeArray, instOffset + 1, &subCode)) {
         printf("ERROR: OUT_OF_RANGE_ACCESS\n");
         exit(1);
     }
@@ -77,7 +77,7 @@ int Debug_printInst(Program *program, int instOffset) {
     printf("0x%04X ", instOffset);
 
     uint8_t opcode;
-    if (!Uint8Array_getItem(&program->codeArray, instOffset, &opcode)) {
+    if (!SpanArray_getItem(&program->codeArray, instOffset, &opcode)) {
         printf("ERROR: OUT_OF_RANGE_ACCESS\n");
         exit(1);
     }

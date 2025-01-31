@@ -14,8 +14,6 @@ int main(int argc, const char* argv[]) {
 
     Program_init(&program);
 
-    printf("size %d\n", (int)sizeof(InstInfoArray));
-
     codeAddr = Program_addByte(&program, OP_STORE);
     InstInfo_init(&info, codeAddr);
     InstInfo_setLocation(&info, 1, 1);

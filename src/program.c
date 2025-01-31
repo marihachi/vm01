@@ -1,31 +1,29 @@
 ﻿#include "program.h"
-#include "value.h"
-#include "instInfo.h"
 
 void Program_init(Program *program) {
-    Uint8Array_init(&program->codeArray);
-    Uint8Array_init(&program->constantPool);
-    InstInfoArray_init(&program->info);
+    SpanArray_init(&program->codeArray, 1);
+    SpanArray_init(&program->constantPool, 1);
+    SpanArray_init(&program->infos, sizeof(InstInfo));
 }
 
 uint16_t Program_addByte(Program *program, uint8_t value) {
-    return Uint8Array_addItem(&program->codeArray, value);
+    return SpanArray_addItem(&program->codeArray, &value);
 }
 
-uint16_t Program_addBytes(Program *program, const uint8_t *value, int length) {
-    return Uint8Array_addItems(&program->codeArray, value, length);
+uint16_t Program_addBytes(Program *program, const uint8_t *value, uint16_t length) {
+    return SpanArray_addItems(&program->codeArray, value, length);
 }
 
-void Program_addInfo(Program *program, InstInfo *info) {
-    InstInfoArray_addItem(&program->info, *info);
+void Program_addInfo(Program *program, const InstInfo *info) {
+    SpanArray_addItem(&program->infos, (uint8_t *)info);
 }
 
-uint16_t Program_addConstant(Program *program, const uint8_t *value, int length) {
-    return Uint8Array_addItems(&program->constantPool, value, length);
+uint16_t Program_addConstant(Program *program, const uint8_t *value, uint16_t length) {
+    return SpanArray_addItems(&program->constantPool, value, length);
 }
 
 void Program_free(Program *program) {
-    Uint8Array_free(&program->codeArray);
-    Uint8Array_free(&program->constantPool);
-    InstInfoArray_free(&program->info);
+    SpanArray_free(&program->codeArray);
+    SpanArray_free(&program->constantPool);
+    SpanArray_free(&program->infos);
 }
