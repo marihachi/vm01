@@ -52,12 +52,19 @@ static ExecResult run() {
 #define FORWARD_16() (vm.pc += 2)
 #define CONSTANT_AT(index) (vm.program->constantPool.ptr[index])
     uint8_t opcode, value, left, right;
+    uint8_t *ptr;
     uint16_t addr;
 FETCH_POINT:
 #ifdef DEBUG_TRACE_EXECUTION
+    printf("[DEBUG] stack(sp=0x%04X):", (int)(vm.sp - (uint8_t *)vm.stack));
+    ptr = vm.sp;
+    while (ptr < vm.stack + STACK_SIZE) {
+        printf(" %02X", *ptr);
+        ptr++;
+    }
+    printf("\n");
     printf("[DEBUG] pc: ");
     Debug_printInst(vm.program, (int)(vm.pc - vm.program->codeArray.ptr));
-    printf("[DEBUG] sp: 0x%04X\n", (int)(vm.sp - (uint8_t *)vm.stack));
     printf("[DEBUG] ----\n");
 #endif
     opcode = READ_UINT8();
