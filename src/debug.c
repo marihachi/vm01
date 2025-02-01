@@ -29,20 +29,19 @@ static void printLocation(Program *program, int instOffset) {
     printf("(%d:%d)", info->line, info->column);
 }
 
-static int pushInstruction(Program *program, int instOffset) {
+static int storeInstruction(Program *program, int instOffset) {
     uint16_t address;
     if (!SpanArray_getItems(&program->codeArray, instOffset + 1, (uint8_t *)&address, 2)) {
         printf("ERROR: OUT_OF_RANGE_ACCESS\n");
         exit(1);
     }
     printf("PUSH 0x%02X ", address);
-    int32_t value;
-    if (!SpanArray_getItems(&program->constantPool, address, (uint8_t *)&value, 4)) {
+    int16_t value;
+    if (!SpanArray_getItems(&program->constantPool, address, (uint8_t *)&value, 2)) {
         printf("ERROR: OUT_OF_RANGE_ACCESS\n");
         exit(1);
     }
-    Value_print(value);
-    printf(" ");
+    printf("%d ", value);
     printLocation(program, instOffset);
     printf("\n");
     return instOffset + 3;
@@ -57,11 +56,7 @@ static int syscallInstruction(Program *program, int instOffset) {
     printf("SYSCALL 0x%02X ", subCode);
     printLocation(program, instOffset);
     printf("\n");
-    if (subCode == 1) {
-        return instOffset + 2;
-    } else {
-        return instOffset + 1;
-    }
+    return instOffset + 2;
 }
 
 void Debug_printProgram(Program *program) {
@@ -113,7 +108,7 @@ int Debug_printInst(Program *program, int instOffset) {
             printf("\n");
             return instOffset + 1;
         case OP_STORE:
-            return pushInstruction(program, instOffset);
+            return storeInstruction(program, instOffset);
         case OP_CALL:
             return instOffset + 2;
         case OP_RETURN:

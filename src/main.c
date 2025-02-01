@@ -10,7 +10,7 @@ int main(int argc, const char* argv[]) {
     Program program;
     InstInfo info;
     uint16_t constantAddr, codeAddr;
-    int32_t value;
+    int16_t value;
 
     Program_init(&program);
 
@@ -18,16 +18,16 @@ int main(int argc, const char* argv[]) {
     InstInfo_init(&info, codeAddr);
     InstInfo_setLocation(&info, 1, 1);
     Program_addInfo(&program, &info);
-    value = 4;
-    constantAddr = Program_addConstant(&program, (uint8_t *)&value, 4);
+    value = 700;
+    constantAddr = Program_addConstant(&program, (uint8_t *)&value, 2);
     Program_addBytes(&program, (uint8_t *)&constantAddr, 2);
 
     codeAddr = Program_addByte(&program, OP_STORE);
     InstInfo_init(&info, codeAddr);
     InstInfo_setLocation(&info, 2, 1);
     Program_addInfo(&program, &info);
-    value = 1;
-    constantAddr = Program_addConstant(&program, (uint8_t *)&value, 4);
+    value = 400;
+    constantAddr = Program_addConstant(&program, (uint8_t *)&value, 2);
     Program_addBytes(&program, (uint8_t *)&constantAddr, 2);
 
     codeAddr = Program_addByte(&program, OP_SUB);
@@ -39,8 +39,8 @@ int main(int argc, const char* argv[]) {
     InstInfo_init(&info, codeAddr);
     InstInfo_setLocation(&info, 4, 1);
     Program_addInfo(&program, &info);
-    value = 2;
-    constantAddr = Program_addConstant(&program, (uint8_t *)&value, 4);
+    value = 5;
+    constantAddr = Program_addConstant(&program, (uint8_t *)&value, 2);
     Program_addBytes(&program, (uint8_t *)&constantAddr, 2);
 
     codeAddr = Program_addByte(&program, OP_MUL);
