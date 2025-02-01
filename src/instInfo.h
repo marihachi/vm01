@@ -9,7 +9,7 @@ typedef struct {
     uint32_t column;
 } InstInfo;
 
-void InstInfo_init(InstInfo *info, uint32_t addr);
-void InstInfo_setLocation(InstInfo *info, uint32_t line, uint32_t column);
+void InstInfo_init(InstInfo *info);
+void InstInfo_setLocation(InstInfo *info, uint32_t addr, uint32_t line, uint32_t column);
 
 #endif

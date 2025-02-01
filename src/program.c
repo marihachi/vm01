@@ -3,7 +3,7 @@
 void Program_init(Program *program) {
     SpanArray_init(&program->codeArray, 1);
     SpanArray_init(&program->constantPool, 1);
-    SpanArray_init(&program->infos, sizeof(InstInfo));
+    SpanArray_init(&program->infos, 1);
 }
 
 uint16_t Program_addByte(Program *program, uint8_t value) {
@@ -15,7 +15,7 @@ uint16_t Program_addBytes(Program *program, const uint8_t *value, uint16_t lengt
 }
 
 void Program_addInfo(Program *program, const InstInfo *info) {
-    SpanArray_addItem(&program->infos, (uint8_t *)info);
+    SpanArray_addItems(&program->infos, (uint8_t *)info, sizeof(InstInfo));
 }
 
 uint16_t Program_addConstant(Program *program, const uint8_t *value, uint16_t length) {

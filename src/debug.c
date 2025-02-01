@@ -7,7 +7,7 @@ static InstInfo *findInstInfo(Program *program, uint32_t offset) {
     int i = 0;
     InstInfo *ptr = NULL;
     while (i < program->infos.length) {
-        ptr = (InstInfo *)&program->infos.ptr[program->infos.elSize * i];
+        ptr = (InstInfo *)&program->infos.ptr[sizeof(InstInfo) * i];
         if (ptr->addr >= offset) {
             break;
         }
@@ -23,7 +23,6 @@ static InstInfo *findInstInfo(Program *program, uint32_t offset) {
 static void printLocation(Program *program, int instOffset) {
     InstInfo *info = findInstInfo(program, instOffset);
     if (info == NULL) {
-        printf("instruction info not found");
         return;
     }
     printf("(%d:%d)", info->line, info->column);

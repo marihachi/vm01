@@ -8,60 +8,47 @@
 int main(int argc, const char* argv[]) {
     VM_init();
     Program program;
-    InstInfo info;
-    uint16_t constantAddr, codeAddr;
     int16_t value;
 
     Program_init(&program);
 
-    codeAddr = Program_addByte(&program, OP_STORE);
-    InstInfo_init(&info, codeAddr);
-    InstInfo_setLocation(&info, 1, 1);
-    Program_addInfo(&program, &info);
+    // constant: 0x0000
     value = 700;
-    constantAddr = Program_addConstant(&program, (uint8_t *)&value, 2);
-    Program_addBytes(&program, (uint8_t *)&constantAddr, 2);
+    Program_addConstant(&program, (uint8_t *)&value, 2);
 
-    codeAddr = Program_addByte(&program, OP_STORE);
-    InstInfo_init(&info, codeAddr);
-    InstInfo_setLocation(&info, 2, 1);
-    Program_addInfo(&program, &info);
+    // constant: 0x0002
     value = 400;
-    constantAddr = Program_addConstant(&program, (uint8_t *)&value, 2);
-    Program_addBytes(&program, (uint8_t *)&constantAddr, 2);
+    Program_addConstant(&program, (uint8_t *)&value, 2);
 
-    codeAddr = Program_addByte(&program, OP_SUB);
-    InstInfo_init(&info, codeAddr);
-    InstInfo_setLocation(&info, 3, 1);
-    Program_addInfo(&program, &info);
-
-    codeAddr = Program_addByte(&program, OP_STORE);
-    InstInfo_init(&info, codeAddr);
-    InstInfo_setLocation(&info, 4, 1);
-    Program_addInfo(&program, &info);
+    // constant: 0x0004
     value = 5;
-    constantAddr = Program_addConstant(&program, (uint8_t *)&value, 2);
-    Program_addBytes(&program, (uint8_t *)&constantAddr, 2);
+    Program_addConstant(&program, (uint8_t *)&value, 2);
 
-    codeAddr = Program_addByte(&program, OP_MUL);
-    InstInfo_init(&info, codeAddr);
-    InstInfo_setLocation(&info, 5, 1);
-    Program_addInfo(&program, &info);
+    uint8_t programCode[] = {
+        0x06, 0x00, 0x00, // 0x00000000: STORE 0x0000
+        0x06, 0x02, 0x00, // 0x00000003: STORE 0x0002
+        0x02,             // 0x00000006: SUB
+        0x06, 0x04, 0x00, // 0x00000007: STORE 0x0004
+        0x03,             // 0x0000000A: MUL
+        0x0A, 0x01,       // 0x0000000B: SYSCALL 0x01
+        0x08,             // 0x0000000D: RETURN
+        0x00,             // 0x0000000E: NOP
+        0x00,             // 0x0000000F: NOP
+    };
+    Program_addBytes(&program, programCode, sizeof(programCode));
 
-    // syscall: print
-    codeAddr = Program_addByte(&program, OP_SYSCALL);
-    InstInfo_init(&info, codeAddr);
-    InstInfo_setLocation(&info, 6, 1);
-    Program_addInfo(&program, &info);
-    Program_addByte(&program, 1);
+    uint8_t metadata[] = {
+        0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x0C, 0x00, 0x00, 0x00, // 0x00000000 (1:12)
+        0x03, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, // 0x00000003 (1:18)
+        0x06, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x10, 0x00, 0x00, 0x00, // 0x00000006 (1:16)
+        0x07, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x07, 0x00, 0x00, 0x00, // 0x00000007 (1:7)
+        0x0A, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x09, 0x00, 0x00, 0x00, // 0x0000000A (1:9)
+        0x0B, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, // 0x0000000B (1:1)
+    };
+    SpanArray_addItems(&program.infos, metadata, sizeof(metadata));
 
-    codeAddr = Program_addByte(&program, OP_RETURN);
-    InstInfo_init(&info, codeAddr);
-    InstInfo_setLocation(&info, 7, 1);
-    Program_addInfo(&program, &info);
-
-    //Debug_printProgram(&program);
-    //printf("\n");
+    Debug_printProgram(&program);
+    printf("\n");
     printf("Executing ...\n");
     ExecResult result = VM_exec(&program);
     printf("Result code %d.\n", result);
