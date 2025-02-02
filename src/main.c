@@ -35,7 +35,7 @@ int main(int argc, const char* argv[]) {
         0x00,             // 0x0000000E: NOP
         0x00,             // 0x0000000F: NOP
     };
-    Program_addBytes(&program, programCode, sizeof(programCode));
+    SpanArray_addItems(&program.codeArray, programCode, sizeof(programCode));
 
     uint8_t metadata[] = {
         0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x0C, 0x00, 0x00, 0x00, // 0x00000000 (1:12)

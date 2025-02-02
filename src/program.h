@@ -29,9 +29,6 @@ typedef struct {
 } Program;
 
 void Program_init(Program *program);
-uint16_t Program_addByte(Program *program, uint8_t value);
-uint16_t Program_addBytes(Program *program, const uint8_t *value, uint16_t length);
-void Program_addInfo(Program *program, const InstInfo *info);
 uint16_t Program_addConstant(Program *program, const uint8_t *value, uint16_t length);
 void Program_free(Program *program);
 

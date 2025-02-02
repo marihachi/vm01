@@ -4,28 +4,23 @@
 #include "value.h"
 
 static InstInfo *findInstInfo(Program *program, uint32_t offset) {
+    InstInfo *ptr;
     int i = 0;
-    InstInfo *ptr = NULL;
     while (i < program->infos.length) {
         ptr = (InstInfo *)&program->infos.ptr[sizeof(InstInfo) * i];
-        if (ptr->addr >= offset) {
-            break;
+        if (ptr->addr == offset) {
+            return ptr;
         }
         i++;
     }
-    if (ptr != NULL && ptr->addr == offset) {
-        return ptr;
-    } else {
-        return NULL;
-    }
+    return NULL;
 }
 
 static void printLocation(Program *program, int instOffset) {
     InstInfo *info = findInstInfo(program, instOffset);
-    if (info == NULL) {
-        return;
+    if (info != NULL) {
+        printf("(%d:%d)", info->line, info->column);
     }
-    printf("(%d:%d)", info->line, info->column);
 }
 
 static int storeInstruction(Program *program, int instOffset) {
