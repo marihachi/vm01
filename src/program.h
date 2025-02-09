@@ -2,7 +2,7 @@
 #define VM01_PROGRAM_H
 
 #include "common.h"
-#include "spanArray.h"
+#include "byteArray.h"
 #include "instInfo.h"
 
 #define END_OF_SECTION(program, offset) \
@@ -23,9 +23,9 @@ typedef enum {
 } OpCode;
 
 typedef struct {
-    SpanArray codeArray;
-    SpanArray constantPool;
-    SpanArray infos;
+    ByteArray codeArray;
+    ByteArray constantPool;
+    ByteArray infos;
 } Program;
 
 void Program_init(Program *program);

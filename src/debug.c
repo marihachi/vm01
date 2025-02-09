@@ -25,13 +25,13 @@ static void printLocation(Program *program, int instOffset) {
 
 static int storeInstruction(Program *program, int instOffset) {
     uint16_t address;
-    if (!SpanArray_getItems(&program->codeArray, instOffset + 1, (uint8_t *)&address, 2)) {
+    if (!ByteArray_getItems(&program->codeArray, instOffset + 1, (uint8_t *)&address, 2)) {
         printf("ERROR: OUT_OF_RANGE_ACCESS\n");
         exit(1);
     }
     printf("PUSH 0x%02X ", address);
     int16_t value;
-    if (!SpanArray_getItems(&program->constantPool, address, (uint8_t *)&value, 2)) {
+    if (!ByteArray_getItems(&program->constantPool, address, (uint8_t *)&value, 2)) {
         printf("ERROR: OUT_OF_RANGE_ACCESS\n");
         exit(1);
     }
@@ -43,7 +43,7 @@ static int storeInstruction(Program *program, int instOffset) {
 
 static int syscallInstruction(Program *program, int instOffset) {
     uint8_t subCode;
-    if (!SpanArray_getItem(&program->codeArray, instOffset + 1, &subCode)) {
+    if (!ByteArray_getItem(&program->codeArray, instOffset + 1, &subCode)) {
         printf("ERROR: OUT_OF_RANGE_ACCESS\n");
         exit(1);
     }
@@ -66,7 +66,7 @@ int Debug_printInst(Program *program, int instOffset) {
     printf("0x%04X ", instOffset);
 
     uint8_t opcode;
-    if (!SpanArray_getItem(&program->codeArray, instOffset, &opcode)) {
+    if (!ByteArray_getItem(&program->codeArray, instOffset, &opcode)) {
         printf("ERROR: OUT_OF_RANGE_ACCESS\n");
         exit(1);
     }

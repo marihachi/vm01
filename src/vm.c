@@ -14,6 +14,7 @@ void VM_free() {
 }
 
 static void push(const uint8_t *src, int length) {
+    // TODO: 境界チェック
     uint8_t *stop = vm.sp;
     vm.sp -= length;
     uint8_t *wrPtr = vm.sp;
@@ -25,6 +26,7 @@ static void push(const uint8_t *src, int length) {
 }
 
 static void pop(uint8_t *out_ptr, int length) {
+    // TODO: 境界チェック
     uint8_t *stop = vm.sp + length;
     while (vm.sp < stop) {
         *out_ptr = *vm.sp;
@@ -43,6 +45,7 @@ void syscallHandler() {
     code = READ_UINT8();
     FORWARD_8();
     if (code == 1) {
+        value16 = 0;
         pop((uint8_t *)&value16, 2);
         printf("%d\n", value16);
     }
@@ -131,7 +134,7 @@ OP_REM_POINT:
 OP_STORE_POINT:
     addr = READ_UINT16();
     FORWARD_16();
-    if (!SpanArray_getItems(&vm.program->constantPool, addr, (uint8_t *)&value16, 2)) {
+    if (!ByteArray_getItems(&vm.program->constantPool, addr, (uint8_t *)&value16, 2)) {
         return EXEC_RESULT_ERROR;
     }
     push((uint8_t *)&value16, 2);

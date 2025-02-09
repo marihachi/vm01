@@ -35,7 +35,7 @@ int main(int argc, const char* argv[]) {
         0x00,             // 0x0000000E: NOP
         0x00,             // 0x0000000F: NOP
     };
-    SpanArray_addItems(&program.codeArray, programCode, sizeof(programCode));
+    ByteArray_addItems(&program.codeArray, programCode, sizeof(programCode));
 
     uint8_t metadata[] = {
         0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x0C, 0x00, 0x00, 0x00, // 0x00000000 (1:12)
@@ -45,7 +45,7 @@ int main(int argc, const char* argv[]) {
         0x0A, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x09, 0x00, 0x00, 0x00, // 0x0000000A (1:9)
         0x0B, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, // 0x0000000B (1:1)
     };
-    SpanArray_addItems(&program.infos, metadata, sizeof(metadata));
+    ByteArray_addItems(&program.infos, metadata, sizeof(metadata));
 
     Debug_printProgram(&program);
     printf("\n");
