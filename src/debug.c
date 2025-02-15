@@ -6,8 +6,8 @@
 static InstInfo *findInstInfo(Program *program, uint32_t offset) {
     InstInfo *ptr;
     int i = 0;
-    while (i < program->infos.length) {
-        ptr = (InstInfo *)&program->infos.ptr[sizeof(InstInfo) * i];
+    while (i < program->metadata.length) {
+        ptr = (InstInfo *)&program->metadata.ptr[sizeof(InstInfo) * i];
         if (ptr->addr == offset) {
             return ptr;
         }
@@ -25,7 +25,7 @@ static void printLocation(Program *program, int instOffset) {
 
 static int storeInstruction(Program *program, int instOffset) {
     uint16_t address;
-    if (!ByteArray_getItems(&program->codeArray, instOffset + 1, (uint8_t *)&address, 2)) {
+    if (!ByteArray_getItems(&program->code, instOffset + 1, (uint8_t *)&address, 2)) {
         printf("ERROR: OUT_OF_RANGE_ACCESS\n");
         exit(1);
     }
@@ -43,7 +43,7 @@ static int storeInstruction(Program *program, int instOffset) {
 
 static int syscallInstruction(Program *program, int instOffset) {
     uint8_t subCode;
-    if (!ByteArray_getItem(&program->codeArray, instOffset + 1, &subCode)) {
+    if (!ByteArray_getItem(&program->code, instOffset + 1, &subCode)) {
         printf("ERROR: OUT_OF_RANGE_ACCESS\n");
         exit(1);
     }
@@ -66,7 +66,7 @@ int Debug_printInst(Program *program, int instOffset) {
     printf("0x%04X ", instOffset);
 
     uint8_t opcode;
-    if (!ByteArray_getItem(&program->codeArray, instOffset, &opcode)) {
+    if (!ByteArray_getItem(&program->code, instOffset, &opcode)) {
         printf("ERROR: OUT_OF_RANGE_ACCESS\n");
         exit(1);
     }
@@ -103,6 +103,11 @@ int Debug_printInst(Program *program, int instOffset) {
             return instOffset + 1;
         case OP_STORE:
             return storeInstruction(program, instOffset);
+        case OP_STORE_Z:
+            printf("STORE_Z ");
+            printLocation(program, instOffset);
+            printf("\n");
+            return instOffset + 1;
         case OP_CALL:
             return instOffset + 2;
         case OP_RETURN:

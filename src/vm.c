@@ -7,7 +7,7 @@
 VM vm;
 
 void VM_init() {
-    vm.sp = (uint8_t *)vm.stack + STACK_SIZE;
+    vm.sp = (uint8_t *)vm.stack + sizeof(vm.stack);
 }
 
 void VM_free() {
@@ -70,13 +70,13 @@ FETCH_POINT:
     uint8_t *debugPtr;
     printf("[DEBUG] stack(sp=0x%04X):", (int)(vm.sp - (uint8_t *)vm.stack));
     debugPtr = vm.sp;
-    while (debugPtr < vm.stack + STACK_SIZE) {
+    while (debugPtr < vm.stack + sizeof(vm.stack)) {
         printf(" %02X", *debugPtr);
         debugPtr++;
     }
     printf("\n");
     printf("[DEBUG] pc: ");
-    Debug_printInst(vm.program, (int)(vm.pc - vm.program->codeArray.ptr));
+    Debug_printInst(vm.program, (int)(vm.pc - vm.program->code.ptr));
     printf("[DEBUG] ----\n");
 #endif
     opcode = READ_UINT8();
@@ -89,6 +89,7 @@ FETCH_POINT:
         case OP_DIV: goto OP_DIV_POINT;
         case OP_REM: goto OP_REM_POINT;
         case OP_STORE: goto OP_STORE_POINT;
+        case OP_STORE_Z: goto OP_STORE_Z_POINT;
         case OP_CALL: goto OP_CALL_POINT;
         case OP_RETURN: goto OP_RETURN_POINT;
         case OP_RETURN_I: goto OP_RETURN_I_POINT;
@@ -140,6 +141,11 @@ OP_STORE_POINT:
     push((uint8_t *)&value16, 2);
     goto FETCH_POINT;
 
+OP_STORE_Z_POINT:
+    value16 = 0;
+    push((uint8_t *)&value16, 2);
+    goto FETCH_POINT;
+
 OP_CALL_POINT:
     // TODO
     goto FETCH_POINT;
@@ -165,6 +171,6 @@ OP_SYSCALL_POINT:
 
 ExecResult VM_exec(Program *program) {
     vm.program = program;
-    vm.pc = vm.program->codeArray.ptr;
+    vm.pc = vm.program->code.ptr;
     return run();
 }
