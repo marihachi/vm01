@@ -32,8 +32,8 @@ int main(int argc, const char* argv[]) {
         0x18, 0x04, 0x00, // 0x00000008: STORE 0x0004
         0x12,             // 0x0000000B: MUL
         0x11,             // 0x0000000C: SUB
-        0x24, 0x01,       // 0x0000000D: SYSCALL 0x01
-        0x20,             // 0x0000000F: RETURN
+        0x30, 0x01,       // 0x0000000D: SYSCALL 0x01
+        0x28,             // 0x0000000F: RETURN
         0x00,             // 0x00000010: NOP
         0x00,             // 0x00000011: NOP
     };
