@@ -5,7 +5,7 @@
 #include "byteArray.h"
 #include "instInfo.h"
 
-#define END_OF_SECTION(program, offset) \
+#define END_OF_CODE(program, offset) \
     ((offset) >= (program)->code.length)
 
 typedef enum {

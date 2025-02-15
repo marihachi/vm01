@@ -36,29 +36,29 @@ static void pop(uint8_t *out_ptr, int length) {
 }
 
 void syscallHandler() {
-#define READ_UINT8() (*vm.pc)
-#define READ_UINT16() (*(uint16_t *)vm.pc)
+#define READ_8() (*vm.pc)
+#define READ_16() (*(uint16_t *)vm.pc)
 #define FORWARD_8() (vm.pc++)
 #define FORWARD_16() (vm.pc += 2)
     uint8_t code;
     int16_t value16;
-    code = READ_UINT8();
+    code = READ_8();
     FORWARD_8();
     if (code == 1) {
         value16 = 0;
         pop((uint8_t *)&value16, 2);
         printf("%d\n", value16);
     }
-#undef READ_UINT8
-#undef READ_UINT16
+#undef READ_8
+#undef READ_16
 #undef FORWARD_8
 #undef FORWARD_16
 }
 
 static ExecResult run() {
     // This function is written at a lower level because it is performance critical.
-#define READ_UINT8() (*vm.pc)
-#define READ_UINT16() (*(uint16_t *)vm.pc)
+#define READ_8() (*vm.pc)
+#define READ_16() (*(uint16_t *)vm.pc)
 #define FORWARD_8() (vm.pc++)
 #define FORWARD_16() (vm.pc += 2)
     uint8_t opcode;
@@ -79,7 +79,7 @@ FETCH_POINT:
     Debug_printInst(vm.program, (int)(vm.pc - vm.program->code.ptr));
     printf("[DEBUG] ----\n");
 #endif
-    opcode = READ_UINT8();
+    opcode = READ_8();
     FORWARD_8();
     switch (opcode) {
         case OP_NOP: goto FETCH_POINT;
@@ -133,7 +133,7 @@ OP_REM_POINT:
     goto FETCH_POINT;
 
 OP_STORE_POINT:
-    addr = READ_UINT16();
+    addr = READ_16();
     FORWARD_16();
     if (!ByteArray_getItems(&vm.program->constantPool, addr, (uint8_t *)&value16, 2)) {
         return EXEC_RESULT_ERROR;
@@ -163,8 +163,8 @@ OP_SYSCALL_POINT:
     syscallHandler();
     goto FETCH_POINT;
 
-#undef READ_UINT8
-#undef READ_UINT16
+#undef READ_8
+#undef READ_16
 #undef FORWARD_8
 #undef FORWARD_16
 }

@@ -56,7 +56,7 @@ static int syscallInstruction(Program *program, int instOffset) {
 void Debug_printProgram(Program *program) {
     printf("== BEGIN PROGRAM ==\n");
     int instOffset = 0;
-    while (!END_OF_SECTION(program, instOffset)) {
+    while (!END_OF_CODE(program, instOffset)) {
         instOffset = Debug_printInst(program, instOffset);
     }
     printf("== END PROGRAM ==\n");
