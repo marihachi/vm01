@@ -23,7 +23,7 @@ uint32_t ByteArray_addItem(ByteArray *arr, const uint8_t *src);
 */
 uint32_t ByteArray_addItems(ByteArray *arr, const uint8_t *src, uint32_t length);
 
-uint32_t ByteArray_copy(ByteArray *arr, const ByteArray *src, uint32_t offset, uint32_t length);
+uint32_t ByteArray_addFromArray(ByteArray *arr, const ByteArray *src, uint32_t srcOffset, uint32_t length);
 
 bool ByteArray_getItem(const ByteArray *arr, uint32_t index, uint8_t *out_item);
 

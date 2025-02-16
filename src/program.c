@@ -28,16 +28,16 @@ bool Program_load(ByteArray *src, Program *out_program) {
     offset = sizeof(ProgramHeader);
 
     if (header->constantLength > 0) {
-        ByteArray_copy(&out_program->constantPool, src, offset, header->constantLength);
+        ByteArray_addFromArray(&out_program->constantPool, src, offset, header->constantLength);
         offset += header->constantLength;
     }
 
     if (header->metadataLength > 0) {
-        ByteArray_copy(&out_program->metadata, src, offset, header->metadataLength);
+        ByteArray_addFromArray(&out_program->metadata, src, offset, header->metadataLength);
         offset += header->metadataLength;
     }
 
-    ByteArray_copy(&out_program->code, src, offset, header->programLength);
+    ByteArray_addFromArray(&out_program->code, src, offset, header->programLength);
     offset += header->programLength;
 
     return true;

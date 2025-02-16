@@ -40,7 +40,7 @@ uint32_t ByteArray_addItems(ByteArray *arr, const uint8_t *src, uint32_t length)
     return head;
 }
 
-uint32_t ByteArray_copy(ByteArray *arr, const ByteArray *src, uint32_t srcOffset, uint32_t length) {
+uint32_t ByteArray_addFromArray(ByteArray *arr, const ByteArray *src, uint32_t srcOffset, uint32_t length) {
     uint32_t head = arr->length;
     uint8_t temp;
     for (uint32_t i = 0; i < length; i++) {
