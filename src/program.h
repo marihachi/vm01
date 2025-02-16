@@ -31,6 +31,14 @@ typedef enum {
 } OpCode;
 
 typedef struct {
+    uint32_t constantLength;
+    uint32_t metadataLength;
+    uint32_t programLength;
+    uint8_t reserved[52];
+} ProgramHeader;
+
+typedef struct {
+    ProgramHeader header;
     ByteArray code;
     ByteArray constantPool;
     ByteArray metadata;
@@ -38,5 +46,7 @@ typedef struct {
 
 void Program_init(Program *program);
 void Program_free(Program *program);
+
+bool Program_load(ByteArray *src, Program *out_program);
 
 #endif

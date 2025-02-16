@@ -5,7 +5,7 @@
 
 static InstInfo *findInstInfo(Program *program, uint32_t offset) {
     InstInfo *ptr;
-    int i = 0;
+    uint32_t i = 0;
     while (i < program->metadata.length) {
         ptr = (InstInfo *)&program->metadata.ptr[sizeof(InstInfo) * i];
         if (ptr->addr == offset) {
@@ -55,7 +55,7 @@ static int syscallInstruction(Program *program, int instOffset) {
 
 void Debug_printProgram(Program *program) {
     printf("== BEGIN PROGRAM ==\n");
-    int instOffset = 0;
+    uint32_t instOffset = 0;
     while (!END_OF_CODE(program, instOffset)) {
         instOffset = Debug_printInst(program, instOffset);
     }

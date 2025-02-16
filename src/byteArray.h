@@ -4,8 +4,8 @@
 #include "common.h"
 
 typedef struct {
-    uint16_t length;
-    uint16_t capacity;
+    uint32_t length;
+    uint32_t capacity;
     uint8_t *ptr;
 } ByteArray;
 
@@ -16,15 +16,17 @@ void ByteArray_free(ByteArray *arr);
 /**
  * @returns index of the item
 */
-uint16_t ByteArray_addItem(ByteArray *arr, const uint8_t *src);
+uint32_t ByteArray_addItem(ByteArray *arr, const uint8_t *src);
 
 /**
  * @returns index of the head item
 */
-uint16_t ByteArray_addItems(ByteArray *arr, const uint8_t *src, uint16_t length);
+uint32_t ByteArray_addItems(ByteArray *arr, const uint8_t *src, uint32_t length);
 
-bool ByteArray_getItem(ByteArray *arr, uint16_t index, uint8_t *out_item);
+uint32_t ByteArray_copy(ByteArray *arr, const ByteArray *src, uint32_t offset, uint32_t length);
 
-bool ByteArray_getItems(ByteArray *arr, uint16_t index, uint8_t *out_item, uint16_t length);
+bool ByteArray_getItem(const ByteArray *arr, uint32_t index, uint8_t *out_item);
+
+bool ByteArray_getItems(const ByteArray *arr, uint32_t index, uint8_t *out_item, uint32_t length);
 
 #endif
