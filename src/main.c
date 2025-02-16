@@ -6,14 +6,12 @@
 #include "debug.h"
 
 int main(int argc, const char* argv[]) {
-    VM_init();
     Program program;
-    ByteArray programBinary;
-
     Program_init(&program);
-    ByteArray_init(&programBinary);
 
-    uint8_t file[] = {
+    ByteArray serialArray;
+    ByteArray_init(&serialArray);
+    uint8_t serialData[] = {
         // header
         0x06, 0x00, 0x00, 0x00, // 6
         0x6C, 0x00, 0x00, 0x00, // 108
@@ -61,16 +59,19 @@ int main(int argc, const char* argv[]) {
         0x00,             // 0x00000010: NOP
         0x00,             // 0x00000011: NOP
     };
-    ByteArray_addItems(&programBinary, file, sizeof(file));
-    Program_load(&programBinary, &program);
+    ByteArray_addItems(&serialArray, serialData, sizeof(serialData));
 
+    Program_load(&program, &serialArray);
     Debug_printProgram(&program);
     printf("\n");
+
+    VM_init();
     printf("Executing ...\n");
     ExecResult result = VM_exec(&program);
     printf("Result code %d.\n", result);
     VM_free();
-    ByteArray_free(&programBinary);
+
+    ByteArray_free(&serialArray);
     Program_free(&program);
 
     return 0;

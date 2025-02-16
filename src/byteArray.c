@@ -1,4 +1,5 @@
-﻿#include "byteArray.h"
+﻿#include <stdlib.h>
+#include "byteArray.h"
 #include "alloc.h"
 
 static void clear(ByteArray *arr) {

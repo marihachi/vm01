@@ -46,7 +46,6 @@ typedef struct {
 
 void Program_init(Program *program);
 void Program_free(Program *program);
-
-bool Program_load(ByteArray *src, Program *out_program);
+bool Program_load(Program *program, ByteArray *src);
 
 #endif

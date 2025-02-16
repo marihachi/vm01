@@ -13,12 +13,12 @@ void Program_free(Program *program) {
     ByteArray_free(&program->metadata);
 }
 
-bool Program_load(ByteArray *src, Program *out_program) {
+bool Program_load(Program *program, ByteArray *src) {
     bool success;
     uint32_t offset;
     ProgramHeader *header;
 
-    header = &out_program->header;
+    header = &program->header;
     offset = 0;
 
     success = ByteArray_getItems(src, offset, (uint8_t *)header, sizeof(ProgramHeader));
@@ -28,16 +28,16 @@ bool Program_load(ByteArray *src, Program *out_program) {
     offset = sizeof(ProgramHeader);
 
     if (header->constantLength > 0) {
-        ByteArray_addFromArray(&out_program->constantPool, src, offset, header->constantLength);
+        ByteArray_addFromArray(&program->constantPool, src, offset, header->constantLength);
         offset += header->constantLength;
     }
 
     if (header->metadataLength > 0) {
-        ByteArray_addFromArray(&out_program->metadata, src, offset, header->metadataLength);
+        ByteArray_addFromArray(&program->metadata, src, offset, header->metadataLength);
         offset += header->metadataLength;
     }
 
-    ByteArray_addFromArray(&out_program->code, src, offset, header->programLength);
+    ByteArray_addFromArray(&program->code, src, offset, header->programLength);
     offset += header->programLength;
 
     return true;
