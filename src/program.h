@@ -30,11 +30,11 @@ typedef enum {
     // 0x31 - 0x38
 } OpCode;
 
+// size limit 64
 typedef struct {
-    uint32_t constantLength;
-    uint32_t metadataLength;
-    uint32_t programLength;
-    uint8_t reserved[52];
+    uint32_t constantOffset;
+    uint32_t metadataOffset;
+    uint32_t programOffset;
 } ProgramHeader;
 
 typedef struct {

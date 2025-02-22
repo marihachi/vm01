@@ -41,16 +41,16 @@ uint32_t ByteArray_addItems(ByteArray *arr, const uint8_t *src, uint32_t length)
     return head;
 }
 
-uint32_t ByteArray_addFromArray(ByteArray *arr, const ByteArray *src, uint32_t srcOffset, uint32_t length) {
+bool ByteArray_addFromArray(ByteArray *arr, const ByteArray *src, uint32_t srcOffset, uint32_t length) {
     uint32_t head = arr->length;
     uint8_t temp;
     for (uint32_t i = 0; i < length; i++) {
         if (!ByteArray_getItem(src, srcOffset + i, &temp)) {
-            exit(1);
+            return false;
         }
         ByteArray_addItem(arr, &temp);
     }
-    return head;
+    return true;
 }
 
 bool ByteArray_getItem(const ByteArray *arr, uint32_t index, uint8_t *out_item) {
