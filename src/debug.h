@@ -2,8 +2,8 @@
 #define VM01_DEBUG_H
 
 #include "common.h"
-#include "program.h"
 #include "byteArray.h"
+#include "program.h"
 
 void Debug_printProgram(Program *program);
 

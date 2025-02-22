@@ -1,6 +1,9 @@
 ﻿#include <stdio.h>
-#include "debug.h"
 #include "vm.h"
+
+#ifdef DEBUG_TRACE_EXECUTION
+#include "debug.h"
+#endif
 
 // スタックはアドレスが減る方向に伸びます。
 

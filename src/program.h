@@ -3,7 +3,6 @@
 
 #include "common.h"
 #include "byteArray.h"
-#include "instInfo.h"
 
 #define END_OF_CODE(program, offset) \
     ((offset) >= (program)->code.length)
@@ -36,6 +35,12 @@ typedef struct {
     uint32_t metadataOffset;
     uint32_t programOffset;
 } ProgramHeader;
+
+typedef struct {
+    uint32_t addr;
+    uint32_t line;
+    uint32_t column;
+} InstInfo;
 
 typedef struct {
     ProgramHeader header;

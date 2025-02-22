@@ -1,5 +1,5 @@
-﻿#ifndef VM01_SPAN_ARRAY_H
-#define VM01_SPAN_ARRAY_H
+﻿#ifndef VM01_BYTE_ARRAY_H
+#define VM01_BYTE_ARRAY_H
 
 #include "common.h"
 

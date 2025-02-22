@@ -1,5 +1,4 @@
-﻿#include <stdlib.h>
-#include "byteArray.h"
+﻿#include "byteArray.h"
 #include "alloc.h"
 
 static void init(ByteArray *arr) {

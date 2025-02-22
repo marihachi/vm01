@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include "program.h"
 #include "binaryFile.h"
-#include "debug.h"
 
 void Program_init(Program *program) {
     ByteArray_init(&program->code);

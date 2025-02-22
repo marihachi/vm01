@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "debug.h"
 #include "value.h"
+#include "program.h"
 
 static InstInfo *findInstInfo(Program *program, uint32_t offset) {
     InstInfo *ptr;

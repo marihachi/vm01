@@ -1,9 +1,11 @@
 ﻿#include <stdio.h>
 #include "common.h"
 #include "program.h"
-#include "instInfo.h"
 #include "vm.h"
+
+#ifdef DEBUG_PRINT_CODE
 #include "debug.h"
+#endif
 
 int main(int argc, const char* argv[]) {
     Program program;
@@ -21,7 +23,7 @@ int main(int argc, const char* argv[]) {
         return 1;
     }
 
-#ifdef DEBUG_TRACE_EXECUTION
+#ifdef DEBUG_PRINT_CODE
     Debug_printProgram(&program);
     printf("\n");
 #endif
