@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "program.h"
 #include "binaryFile.h"
+#include "byteStream.h"
 
 void Program_init(Program *program) {
     ByteArray_init(&program->code);
@@ -19,9 +20,13 @@ static bool decode(Program *program, const ByteArray *src) {
     uint32_t offset;
     ProgramHeader *header;
     uint32_t length = 0;
+    ByteStream stream;
+    uint8_t byte;
 
     header = &program->header;
     offset = 0;
+
+    ByteStream_init(&stream, src);
 
     // program header
 
@@ -46,9 +51,14 @@ static bool decode(Program *program, const ByteArray *src) {
         return false;
     }
     offset += sizeof(length);
-    if (!ByteArray_addFromArray(&program->constantPool, src, offset, length)) {
-        printf("invalid constant block\n");
-        return false;
+    ByteStream_seek(&stream, offset);
+    while (length > 0) {
+        if (!ByteStream_readByte(&stream, &byte)) {
+            printf("invalid constant block\n");
+            return false;
+        }
+        ByteArray_addItem(&program->constantPool, &byte);
+        length--;
     }
 
     // metadata
@@ -59,9 +69,14 @@ static bool decode(Program *program, const ByteArray *src) {
         return false;
     }
     offset += sizeof(length);
-    if (!ByteArray_addFromArray(&program->metadata, src, offset, length)) {
-        printf("invalid metadata block\n");
-        return false;
+    ByteStream_seek(&stream, offset);
+    while (length > 0) {
+        if (!ByteStream_readByte(&stream, &byte)) {
+            printf("invalid metadata block\n");
+            return false;
+        }
+        ByteArray_addItem(&program->metadata, &byte);
+        length--;
     }
 
     // code
@@ -72,9 +87,14 @@ static bool decode(Program *program, const ByteArray *src) {
         return false;
     }
     offset += sizeof(length);
-    if (!ByteArray_addFromArray(&program->code, src, offset, length)) {
-        printf("invalid code block\n");
-        return false;
+    ByteStream_seek(&stream, offset);
+    while (length > 0) {
+        if (!ByteStream_readByte(&stream, &byte)) {
+            printf("invalid code block\n");
+            return false;
+        }
+        ByteArray_addItem(&program->code, &byte);
+        length--;
     }
 
     return true;
