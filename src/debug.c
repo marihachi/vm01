@@ -126,3 +126,21 @@ int Debug_printInst(Program *program, int instOffset) {
             return instOffset + 1;
     }
 }
+
+void Debug_printBinaryDump(const ByteArray *byteArray) {
+    uint8_t byte;
+    for (uint32_t i = 0; i < byteArray->length; i++) {
+        ByteArray_getItem(byteArray, i, &byte);
+        if (i == 0) {
+            printf("0x00000000: ");
+        }
+        else if (i % 16 == 0) {
+            printf("0x%08X: ", i);
+        }
+        printf("%02X ", byte);
+        if (i > 0 && (i + 1) % 16 == 0) {
+            printf("\n");
+        }
+    }
+    printf("\n");
+}

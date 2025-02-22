@@ -11,5 +11,13 @@ vmお試し
 コンソールはVisual Studio付属のDeveloper Command Promptを使用してください。\
 コンソールから`build.bat`を呼び出すことでビルドできます。
 
+## 実行
+コマンドプロンプトを開きます。\
+vm.exeが生成された場所に移動し、以下のコマンドを実行します。
+```shell
+vm.exe ../../../program.bin
+```
+リポジトリ直下のプログラムが実行され、実行結果が表示されます。
+
 ## License
 MIT

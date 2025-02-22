@@ -1,5 +1,8 @@
-﻿#include "program.h"
-#include <stdio.h>
+﻿#include <stdio.h>
+#include <stdlib.h>
+#include "program.h"
+#include "binaryFile.h"
+#include "debug.h"
 
 void Program_init(Program *program) {
     ByteArray_init(&program->code);
@@ -13,7 +16,7 @@ void Program_free(Program *program) {
     ByteArray_free(&program->metadata);
 }
 
-bool Program_load(Program *program, ByteArray *src) {
+static bool decode(Program *program, const ByteArray *src) {
     uint32_t offset;
     ProgramHeader *header;
     uint32_t length = 0;
@@ -76,4 +79,26 @@ bool Program_load(Program *program, ByteArray *src) {
     }
 
     return true;
+}
+
+bool Program_loadFile(Program *program, const char *path) {
+    bool result = true;
+    ByteArray fileData;
+
+    ByteArray_init(&fileData);
+
+    if (!binaryFile_readToEnd(path, &fileData)) {
+        result = false;
+        goto finally;
+    }
+
+    if (!decode(program, &fileData)) {
+        result = false;
+        goto finally;
+    }
+
+finally:
+    ByteArray_free(&fileData);
+
+    return result;
 }

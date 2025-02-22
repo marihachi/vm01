@@ -2,19 +2,19 @@
 #include "byteArray.h"
 #include "alloc.h"
 
-static void clear(ByteArray *arr) {
+static void init(ByteArray *arr) {
     arr->capacity = 0;
     arr->length = 0;
     arr->ptr = NULL;
 }
 
 void ByteArray_init(ByteArray *arr) {
-    clear(arr);
+    init(arr);
 }
 
 void ByteArray_free(ByteArray *arr) {
     FREE_MEM(uint8_t, arr->ptr, arr->capacity);
-    clear(arr);
+    init(arr);
 }
 
 uint32_t ByteArray_addItem(ByteArray *arr, const uint8_t *src) {
@@ -73,4 +73,8 @@ bool ByteArray_getItems(const ByteArray *arr, uint32_t index, uint8_t *out_item,
         ptr++;
     }
     return true;
+}
+
+void ByteArray_clear(ByteArray *arr) {
+    arr->length = 0;
 }

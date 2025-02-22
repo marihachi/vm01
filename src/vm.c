@@ -82,86 +82,76 @@ FETCH_POINT:
     opcode = READ_8();
     FORWARD_8();
     switch (opcode) {
-        case OP_NOP: goto FETCH_POINT;
-        case OP_ADD: goto OP_ADD_POINT;
-        case OP_SUB: goto OP_SUB_POINT;
-        case OP_MUL: goto OP_MUL_POINT;
-        case OP_DIV: goto OP_DIV_POINT;
-        case OP_REM: goto OP_REM_POINT;
-        case OP_STORE: goto OP_STORE_POINT;
-        case OP_STORE_Z: goto OP_STORE_Z_POINT;
-        case OP_CALL: goto OP_CALL_POINT;
-        case OP_RETURN: goto OP_RETURN_POINT;
-        case OP_RETURN_I: goto OP_RETURN_I_POINT;
-        case OP_SYSCALL: goto OP_SYSCALL_POINT;
+        case OP_NOP:
+            goto FETCH_POINT;
+
+        case OP_ADD:
+            pop((uint8_t *)&right16, 2);
+            pop((uint8_t *)&left16, 2);
+            value16 = left16 + right16;
+            push((uint8_t *)&value16, 2);
+            goto FETCH_POINT;
+
+        case OP_SUB:
+            pop((uint8_t *)&right16, 2);
+            pop((uint8_t *)&left16, 2);
+            value16 = left16 - right16;
+            push((uint8_t *)&value16, 2);
+            goto FETCH_POINT;
+
+        case OP_MUL:
+            pop((uint8_t *)&right16, 2);
+            pop((uint8_t *)&left16, 2);
+            value16 = left16 * right16;
+            push((uint8_t *)&value16, 2);
+            goto FETCH_POINT;
+
+        case OP_DIV:
+            pop((uint8_t *)&right16, 2);
+            pop((uint8_t *)&left16, 2);
+            value16 = left16 / right16;
+            push((uint8_t *)&value16, 2);
+            goto FETCH_POINT;
+
+        case OP_REM:
+            pop((uint8_t *)&right16, 2);
+            pop((uint8_t *)&left16, 2);
+            value16 = left16 % right16;
+            push((uint8_t *)&value16, 2);
+            goto FETCH_POINT;
+
+        case OP_STORE:
+            addr = READ_16();
+            FORWARD_16();
+            if (!ByteArray_getItems(&vm.program->constantPool, addr, (uint8_t *)&value16, 2)) {
+                return EXEC_RESULT_ERROR;
+            }
+            push((uint8_t *)&value16, 2);
+            goto FETCH_POINT;
+
+        case OP_STORE_Z:
+            value16 = 0;
+            push((uint8_t *)&value16, 2);
+            goto FETCH_POINT;
+
+        case OP_CALL:
+            // TODO
+            goto FETCH_POINT;
+
+        case OP_RETURN:
+            // TODO
+            return EXEC_RESULT_OK;
+
+        case OP_RETURN_I:
+            pop((uint8_t *)&value16, 2);
+            // TODO
+            return EXEC_RESULT_OK;
+
+        case OP_SYSCALL:
+            syscallHandler();
+            goto FETCH_POINT;
     }
     return EXEC_RESULT_ERROR;
-
-OP_ADD_POINT:
-    pop((uint8_t *)&right16, 2);
-    pop((uint8_t *)&left16, 2);
-    value16 = left16 + right16;
-    push((uint8_t *)&value16, 2);
-    goto FETCH_POINT;
-
-OP_SUB_POINT:
-    pop((uint8_t *)&right16, 2);
-    pop((uint8_t *)&left16, 2);
-    value16 = left16 - right16;
-    push((uint8_t *)&value16, 2);
-    goto FETCH_POINT;
-
-OP_MUL_POINT:
-    pop((uint8_t *)&right16, 2);
-    pop((uint8_t *)&left16, 2);
-    value16 = left16 * right16;
-    push((uint8_t *)&value16, 2);
-    goto FETCH_POINT;
-
-OP_DIV_POINT:
-    pop((uint8_t *)&right16, 2);
-    pop((uint8_t *)&left16, 2);
-    value16 = left16 / right16;
-    push((uint8_t *)&value16, 2);
-    goto FETCH_POINT;
-
-OP_REM_POINT:
-    pop((uint8_t *)&right16, 2);
-    pop((uint8_t *)&left16, 2);
-    value16 = left16 % right16;
-    push((uint8_t *)&value16, 2);
-    goto FETCH_POINT;
-
-OP_STORE_POINT:
-    addr = READ_16();
-    FORWARD_16();
-    if (!ByteArray_getItems(&vm.program->constantPool, addr, (uint8_t *)&value16, 2)) {
-        return EXEC_RESULT_ERROR;
-    }
-    push((uint8_t *)&value16, 2);
-    goto FETCH_POINT;
-
-OP_STORE_Z_POINT:
-    value16 = 0;
-    push((uint8_t *)&value16, 2);
-    goto FETCH_POINT;
-
-OP_CALL_POINT:
-    // TODO
-    goto FETCH_POINT;
-
-OP_RETURN_POINT:
-    // TODO
-    return EXEC_RESULT_OK;
-
-OP_RETURN_I_POINT:
-    pop((uint8_t *)&value16, 2);
-    // TODO
-    return EXEC_RESULT_OK;
-
-OP_SYSCALL_POINT:
-    syscallHandler();
-    goto FETCH_POINT;
 
 #undef READ_8
 #undef READ_16

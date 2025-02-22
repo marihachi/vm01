@@ -29,4 +29,6 @@ bool ByteArray_getItem(const ByteArray *arr, uint32_t index, uint8_t *out_item);
 
 bool ByteArray_getItems(const ByteArray *arr, uint32_t index, uint8_t *out_item, uint32_t length);
 
+void ByteArray_clear(ByteArray *arr);
+
 #endif

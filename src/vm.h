@@ -16,8 +16,8 @@ typedef struct {
 } VM;
 
 typedef enum {
-    EXEC_RESULT_OK,
-    EXEC_RESULT_ERROR,
+    EXEC_RESULT_OK = 0,
+    EXEC_RESULT_ERROR = 1,
 } ExecResult;
 
 void VM_init();
