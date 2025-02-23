@@ -20,7 +20,7 @@ bool binaryFile_readToEnd(const char *path, ByteArray *byteArray) {
         ByteArray_addItems(byteArray, buf, count);
     }
 
-    finally:
+finally:
     fclose(stream);
 
     return success;
