@@ -137,9 +137,6 @@ void Debug_printBuf(const uint8_t *buf, uint32_t length) {
             printf("\n | ");
         }
         printf("%02X ", byte);
-        if (i > 0 && (i + 1) % 16 == 0) {
-            printf("\n");
-        }
     }
     printf("\n");
 }
@@ -153,9 +150,6 @@ void Debug_printArray(const ByteArray *byteArray) {
             printf("\n | ");
         }
         printf("%02X ", byte);
-        if (i > 0 && (i + 1) % 16 == 0) {
-            printf("\n");
-        }
     }
     printf("\n");
 }
