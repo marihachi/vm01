@@ -16,7 +16,7 @@ void ByteArray_free(ByteArray *arr) {
     init(arr);
 }
 
-uint32_t ByteArray_addItem(ByteArray *arr, const uint8_t *src) {
+uint32_t ByteArray_addItem(ByteArray *arr, uint8_t src) {
     uint32_t newIndex = arr->length;
 
     // resize
@@ -26,7 +26,7 @@ uint32_t ByteArray_addItem(ByteArray *arr, const uint8_t *src) {
         arr->ptr = GLOW_MEM(uint8_t, arr->ptr, oldCapacity, arr->capacity);
     }
 
-    *(arr->ptr + arr->length) = *src;
+    *(arr->ptr + arr->length) = src;
     arr->length++;
     return newIndex;
 }
@@ -34,7 +34,7 @@ uint32_t ByteArray_addItem(ByteArray *arr, const uint8_t *src) {
 uint32_t ByteArray_addItems(ByteArray *arr, const uint8_t *src, uint32_t length) {
     uint32_t head = arr->length;
     for (uint32_t i = 0; i < length; i++) {
-        ByteArray_addItem(arr, src);
+        ByteArray_addItem(arr, *src);
         src++;
     }
     return head;

@@ -16,7 +16,7 @@ void ByteArray_free(ByteArray *arr);
 /**
  * @returns index of the item
 */
-uint32_t ByteArray_addItem(ByteArray *arr, const uint8_t *src);
+uint32_t ByteArray_addItem(ByteArray *arr, uint8_t src);
 
 /**
  * @returns index of the head item
