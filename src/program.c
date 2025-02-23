@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "program.h"
 #include "binaryFile.h"
-#include "byteStream.h"
+#include "arrayReader.h"
 
 #ifdef DEBUG_TRACE_DECODE
 #include "debug.h"
@@ -22,20 +22,20 @@ void Program_free(Program *program) {
 
 static bool decode(Program *program, const ByteArray *src) {
     ProgramHeader *header;
-    ByteStream stream;
+    ArrayReader reader;
     uint32_t readLength, readResult, length;
     uint8_t buf[64];
 
     length = 0;
     header = &program->header;
 
-    ByteStream_init(&stream, src);
+    ArrayReader_init(&reader, src);
 
     // file header
     #ifdef DEBUG_TRACE_DECODE
     printf("-- file header --\n");
     #endif
-    readResult = ByteStream_read(&stream, (uint8_t *)header, sizeof(ProgramHeader));
+    readResult = ArrayReader_read(&reader, (uint8_t *)header, sizeof(ProgramHeader));
     if (readResult < sizeof(ProgramHeader)) {
         printf("invalid file header\n");
         return false;
@@ -59,8 +59,8 @@ static bool decode(Program *program, const ByteArray *src) {
     #ifdef DEBUG_TRACE_DECODE
     printf("-- constants block --\n");
     #endif
-    ByteStream_seek(&stream, header->constantOffset);
-    readResult = ByteStream_read(&stream, (uint8_t *)&length, sizeof(length));
+    ArrayReader_seek(&reader, header->constantOffset);
+    readResult = ArrayReader_read(&reader, (uint8_t *)&length, sizeof(length));
     if (readResult < sizeof(length)) {
         printf("invalid constants header\n");
         return false;
@@ -70,7 +70,7 @@ static bool decode(Program *program, const ByteArray *src) {
     #endif
     while (length > 0) {
         readLength = length < sizeof(buf) ? length : sizeof(buf);
-        readResult = ByteStream_read(&stream, buf, readLength);
+        readResult = ArrayReader_read(&reader, buf, readLength);
         if (readResult == 0) {
             printf("invalid constants block\n");
             return false;
@@ -83,8 +83,8 @@ static bool decode(Program *program, const ByteArray *src) {
     #ifdef DEBUG_TRACE_DECODE
     printf("-- metadata block --\n");
     #endif
-    ByteStream_seek(&stream, header->metadataOffset);
-    readResult = ByteStream_read(&stream, (uint8_t *)&length, sizeof(length));
+    ArrayReader_seek(&reader, header->metadataOffset);
+    readResult = ArrayReader_read(&reader, (uint8_t *)&length, sizeof(length));
     if (readResult < sizeof(length)) {
         printf("invalid metadata header\n");
         return false;
@@ -94,7 +94,7 @@ static bool decode(Program *program, const ByteArray *src) {
     #endif
     while (length > 0) {
         readLength = length < sizeof(buf) ? length : sizeof(buf);
-        readResult = ByteStream_read(&stream, buf, readLength);
+        readResult = ArrayReader_read(&reader, buf, readLength);
         if (readResult == 0) {
             printf("invalid metadata block\n");
             return false;
@@ -107,8 +107,8 @@ static bool decode(Program *program, const ByteArray *src) {
     #ifdef DEBUG_TRACE_DECODE
     printf("-- code block --\n");
     #endif
-    ByteStream_seek(&stream, header->programOffset);
-    readResult = ByteStream_read(&stream, (uint8_t *)&length, sizeof(length));
+    ArrayReader_seek(&reader, header->programOffset);
+    readResult = ArrayReader_read(&reader, (uint8_t *)&length, sizeof(length));
     if (readResult < sizeof(length)) {
         printf("invalid code header\n");
         return false;
@@ -118,7 +118,7 @@ static bool decode(Program *program, const ByteArray *src) {
     #endif
     while (length > 0) {
         readLength = length < sizeof(buf) ? length : sizeof(buf);
-        readResult = ByteStream_read(&stream, buf, readLength);
+        readResult = ArrayReader_read(&reader, buf, readLength);
         if (readResult == 0) {
             printf("invalid code block\n");
             return false;

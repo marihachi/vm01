@@ -6,14 +6,14 @@ bool binaryFile_readToEnd(const char *path, ByteArray *byteArray) {
     uint32_t count;
     bool success = true;
 
-    FILE *stream = fopen(path, "rb");
-    if (stream == NULL) {
+    FILE *file = fopen(path, "rb");
+    if (file == NULL) {
         return false;
     }
 
-    while (!feof(stream)) {
-        count = (uint32_t)fread(buf, 1, sizeof(buf), stream);
-        if (ferror(stream)) {
+    while (!feof(file)) {
+        count = (uint32_t)fread(buf, 1, sizeof(buf), file);
+        if (ferror(file)) {
             success = false;
             goto finally;
         }
@@ -21,7 +21,7 @@ bool binaryFile_readToEnd(const char *path, ByteArray *byteArray) {
     }
 
 finally:
-    fclose(stream);
+    fclose(file);
 
     return success;
 }
