@@ -12,6 +12,7 @@ void Debug_printProgram(Program *program);
 */
 int Debug_printInst(Program *program, int instOffset);
 
-void Debug_printBinaryDump(const ByteArray *byteArray);
+void Debug_printBuf(const uint8_t *buf, uint32_t length);
+void Debug_printArray(const ByteArray *byteArray);
 
 #endif

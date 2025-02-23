@@ -4,6 +4,10 @@
 #include "binaryFile.h"
 #include "byteStream.h"
 
+#ifdef DEBUG_TRACE_DECODE
+#include "debug.h"
+#endif
+
 void Program_init(Program *program) {
     ByteArray_init(&program->code);
     ByteArray_init(&program->constantPool);
@@ -17,85 +21,115 @@ void Program_free(Program *program) {
 }
 
 static bool decode(Program *program, const ByteArray *src) {
-    uint32_t offset;
     ProgramHeader *header;
-    uint32_t length = 0;
     ByteStream stream;
-    uint8_t byte;
+    uint32_t readLength, readResult, length;
+    uint8_t buf[64];
 
+    length = 0;
     header = &program->header;
-    offset = 0;
 
     ByteStream_init(&stream, src);
 
-    // program header
-
-    if (!ByteArray_getItems(src, offset, (uint8_t *)header, sizeof(ProgramHeader))) {
-        printf("invalid program header\n");
+    // file header
+    #ifdef DEBUG_TRACE_DECODE
+    printf("-- file header --\n");
+    #endif
+    readResult = ByteStream_read(&stream, (uint8_t *)header, sizeof(ProgramHeader));
+    if (readResult < sizeof(ProgramHeader)) {
+        printf("invalid file header\n");
         return false;
     }
-
-    if (header->constantOffset >= src->length ||
+    #ifdef DEBUG_TRACE_DECODE
+    printf("magic code: %c%c%c%c\n", header->magicCode[0], header->magicCode[1], header->magicCode[2] ,header->magicCode[3]);
+    printf("constants block offset: 0x%04X\n", header->constantOffset);
+    printf("metadata block offset: 0x%04X\n", header->metadataOffset);
+    printf("code block offset: 0x%04X\n", header->programOffset);
+    #endif
+    if (header->magicCode[0] != 'V' || header->magicCode[1] != 'M' || header->magicCode[2] != '0' || header->magicCode[3] != '1' ||
+        header->constantOffset >= src->length ||
         header->metadataOffset >= src->length ||
         header->programOffset >= src->length
     ) {
-        printf("invalid program header\n");
+        printf("invalid file header\n");
         return false;
     }
 
-    // constant pool
-
-    offset = header->constantOffset;
-    if (!ByteArray_getItems(src, offset, (uint8_t *)&length, sizeof(length))) {
-        printf("invalid constant header\n");
+    // constants block
+    #ifdef DEBUG_TRACE_DECODE
+    printf("-- constants block --\n");
+    #endif
+    ByteStream_seek(&stream, header->constantOffset);
+    readResult = ByteStream_read(&stream, (uint8_t *)&length, sizeof(length));
+    if (readResult < sizeof(length)) {
+        printf("invalid constants header\n");
         return false;
     }
-    offset += sizeof(length);
-    ByteStream_seek(&stream, offset);
+    #ifdef DEBUG_TRACE_DECODE
+    printf("block size 0x%04X\n", length);
+    #endif
     while (length > 0) {
-        if (!ByteStream_readByte(&stream, &byte)) {
-            printf("invalid constant block\n");
+        readLength = length < sizeof(buf) ? length : sizeof(buf);
+        readResult = ByteStream_read(&stream, buf, readLength);
+        if (readResult == 0) {
+            printf("invalid constants block\n");
             return false;
         }
-        ByteArray_addItem(&program->constantPool, &byte);
-        length--;
+        ByteArray_addItems(&program->constantPool, buf, readResult);
+        length -= readResult;
     }
 
-    // metadata
-
-    offset = header->metadataOffset;
-    if (!ByteArray_getItems(src, offset, (uint8_t *)&length, sizeof(length))) {
+    // metadata block
+    #ifdef DEBUG_TRACE_DECODE
+    printf("-- metadata block --\n");
+    #endif
+    ByteStream_seek(&stream, header->metadataOffset);
+    readResult = ByteStream_read(&stream, (uint8_t *)&length, sizeof(length));
+    if (readResult < sizeof(length)) {
         printf("invalid metadata header\n");
         return false;
     }
-    offset += sizeof(length);
-    ByteStream_seek(&stream, offset);
+    #ifdef DEBUG_TRACE_DECODE
+    printf("block size 0x%04X\n", length);
+    #endif
     while (length > 0) {
-        if (!ByteStream_readByte(&stream, &byte)) {
+        readLength = length < sizeof(buf) ? length : sizeof(buf);
+        readResult = ByteStream_read(&stream, buf, readLength);
+        if (readResult == 0) {
             printf("invalid metadata block\n");
             return false;
         }
-        ByteArray_addItem(&program->metadata, &byte);
-        length--;
+        ByteArray_addItems(&program->metadata, buf, readResult);
+        length -= readResult;
     }
 
-    // code
-
-    offset = header->programOffset;
-    if (!ByteArray_getItems(src, offset, (uint8_t *)&length, sizeof(length))) {
+    // code block
+    #ifdef DEBUG_TRACE_DECODE
+    printf("-- code block --\n");
+    #endif
+    ByteStream_seek(&stream, header->programOffset);
+    readResult = ByteStream_read(&stream, (uint8_t *)&length, sizeof(length));
+    if (readResult < sizeof(length)) {
         printf("invalid code header\n");
         return false;
     }
-    offset += sizeof(length);
-    ByteStream_seek(&stream, offset);
+    #ifdef DEBUG_TRACE_DECODE
+    printf("block size 0x%04X\n", length);
+    #endif
     while (length > 0) {
-        if (!ByteStream_readByte(&stream, &byte)) {
+        readLength = length < sizeof(buf) ? length : sizeof(buf);
+        readResult = ByteStream_read(&stream, buf, readLength);
+        if (readResult == 0) {
             printf("invalid code block\n");
             return false;
         }
-        ByteArray_addItem(&program->code, &byte);
-        length--;
+        ByteArray_addItems(&program->code, buf, readResult);
+        length -= readResult;
     }
+
+    #ifdef DEBUG_TRACE_DECODE
+    printf("\n");
+    #endif
 
     return true;
 }

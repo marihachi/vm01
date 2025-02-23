@@ -31,6 +31,7 @@ typedef enum {
 
 // size limit 64
 typedef struct {
+    uint8_t magicCode[4];
     uint32_t constantOffset;
     uint32_t metadataOffset;
     uint32_t programOffset;

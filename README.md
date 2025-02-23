@@ -1,5 +1,5 @@
 # vm01
-vmお試し
+An experiment for stack machine based VM (01).
 
 ## 推奨環境
 - Windows 10
