@@ -2,3 +2,4 @@ obj
 bin
 *.vcxproj.user
 .vs
+build

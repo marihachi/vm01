@@ -1,3 +1,3 @@
 @echo off
 
-msbuild -p:Configuration=Debug
+cmake -S src -B build
