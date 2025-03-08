@@ -8,24 +8,24 @@
     ((offset) >= (program)->code.length)
 
 typedef enum {
-    OP_NOP = 0x00,
+    OP_NOP = 0x00,      // operands: -
     // 0x01 - 0x07
     // 0x08 - 0x0F
-    OP_ADD = 0x10,
-    OP_SUB = 0x11,
-    OP_MUL = 0x12,
-    OP_DIV = 0x13,
-    OP_REM = 0x14,
+    OP_ADD = 0x10,      // operands: -
+    OP_SUB = 0x11,      // operands: -
+    OP_MUL = 0x12,      // operands: -
+    OP_DIV = 0x13,      // operands: -
+    OP_REM = 0x14,      // operands: -
     // 0x15 - 0x17
-    OP_STORE = 0x18,
-    OP_STORE_Z = 0x19,
+    OP_STORE = 0x18,    // operands: constant offset(2 bytes)
+    OP_STORE_Z = 0x19,  // operands: -
     // 0x1A - 0x1F
     OP_CALL = 0x20,
     // 0x21 - 0x27
-    OP_RETURN = 0x28,
+    OP_RETURN = 0x28,   // operands: -
     OP_RETURN_I = 0x29,
     // 0x2A - 0x2F
-    OP_SYSCALL = 0x30,
+    OP_SYSCALL = 0x30,  // operands: subcode (1 byte) + syscall args
     // 0x31 - 0x38
 } OpCode;
 

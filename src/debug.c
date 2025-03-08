@@ -30,7 +30,7 @@ static int storeInstruction(Program *program, int instOffset) {
         printf("ERROR: OUT_OF_RANGE_ACCESS\n");
         exit(1);
     }
-    printf("PUSH 0x%02X ", address);
+    printf("STORE 0x%02X ", address);
     int16_t value;
     if (!ByteArray_getItems(&program->constantPool, address, (uint8_t *)&value, 2)) {
         printf("ERROR: OUT_OF_RANGE_ACCESS\n");
