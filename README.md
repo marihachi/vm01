@@ -5,7 +5,7 @@ An experiment for stack machine based VM 01.
 
 ### System required
 - cmake
-- clang or gcc
+- C compiler (clang recommended)
 
 ### Build
 Run:
@@ -33,7 +33,7 @@ Use the Developer Command Prompt of Visual Studio.\
 You can build an binary by calling `build.bat` in the console.
 
 ### Run vm01
-Open an Command Prompt.\
+Open a Command Prompt.\
 Go to the directory where vm01.exe was generated, And execute the following command:
 ```shell
 vm01.exe ../../../program.bin
