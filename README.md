@@ -1,11 +1,13 @@
 # vm01
 An experiment for stack machine based VM 01.
 
-## Build (Linux)
-System required:
+## for Linux
+
+### System required
 - cmake
 - clang or gcc
 
+### Build
 Run:
 ```bash
 ./build.sh
@@ -16,22 +18,26 @@ Clean up for the build directory:
 ./clean.sh
 ```
 
-## Run vm01 (Linux)
+### Run vm01
 ```shell
 ./build/vm01 ./program.bin
 ```
 
-## Build (Windows)
-コンソールはVisual Studio付属のDeveloper Command Promptを使用してください。\
-コンソールから`build.bat`を呼び出すことでビルドできます。
+## for Windows
 
-## Run vm01 (Windows)
-コマンドプロンプトを開きます。\
-vm01.exeが生成された場所に移動し、以下のコマンドを実行します。
+### System required
+- Visual Studio
+
+### Build
+Use the Developer Command Prompt of Visual Studio.\
+You can build an binary by calling `build.bat` in the console.
+
+### Run vm01
+Open an Command Prompt.\
+Go to the directory where vm01.exe was generated, And execute the following command:
 ```shell
 vm01.exe ../../../program.bin
 ```
-リポジトリ直下のプログラムが実行され、実行結果が表示されます。
 
 ## License
 MIT
