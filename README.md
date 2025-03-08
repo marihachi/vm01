@@ -8,19 +8,22 @@ An experiment for stack machine based VM 01.
 - C compiler (clang recommended)
 
 ### Build
-Run:
+1. Configure
 ```bash
-./build.sh
+cmake -S src -B build
 ```
 
-Clean up for the build directory:
+2. use make commands:
 ```bash
-./clean.sh
+cd build
+make clean
+make all
 ```
 
 ### Run vm01
 ```shell
-./build/vm01 ./program.bin
+cd build
+./vm01 ../program.bin
 ```
 
 ## for Windows
@@ -29,8 +32,12 @@ Clean up for the build directory:
 - Visual Studio
 
 ### Build
-Use the Developer Command Prompt of Visual Studio.\
-You can build an binary by calling `build.bat` in the console.
+1. Configure
+```shell
+cmake -S src -B build
+```
+2. Open the .sln file in the build directory to start Visual Studio.
+3. Rebuild the solution in the Visual Studio.
 
 ### Run vm01
 Open a Command Prompt.\
